@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -47,11 +46,9 @@ public class WorkOrderController {
 	}
 
 	@RequestMapping(value="/workorder/dialog" , method=RequestMethod.GET)
-
-	public ModelMap showWorkOrderDialog(@RequestParam("mrpGatheringNoList")String mrpGatheringNoList,
-										@RequestParam("mrpNoList")String mrpNoList) {
-
-
+	public ModelMap showWorkOrderDialog(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringNoList = request.getParameter("mrpGatheringNoList");
+		String mrpNoList = request.getParameter("mrpNoList");
 		map = new ModelMap();
 		try {
 			map = qualityService.getWorkOrderSimulationList(mrpGatheringNoList,mrpNoList);
@@ -64,13 +61,11 @@ public class WorkOrderController {
 	}
 
 	@RequestMapping(value="/workorder" , method=RequestMethod.POST)
-
-	public ModelMap workOrder(@RequestParam("mrpGatheringNo")String mrpGatheringNo,
-							  @RequestParam("workPlaceCode")String workPlaceCode,
-							  @RequestParam("productionProcess")String productionProcess,
-							  @RequestParam("mrpNo")String mrpNo) {
-		
-
+	public ModelMap workOrder(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringNo = request.getParameter("mrpGatheringNo"); // mrpGatheringNo
+		String workPlaceCode = request.getParameter("workPlaceCode"); 
+		String productionProcess = request.getParameter("productionProcessCode"); 
+		String mrpNo = request.getParameter("mrpNo");
 		map = new ModelMap();
 		try {
 
@@ -103,11 +98,9 @@ public class WorkOrderController {
 	}
 	
 	@RequestMapping(value="/workorder/completion" , method=RequestMethod.POST)
-	public ModelMap workOrderCompletion(
-			@RequestParam("workOrderNo") String workOrderNo,
-			@RequestParam("actualCompletionAmount") String actualCompletionAmount
-	)  {
-
+	public ModelMap workOrderCompletion(HttpServletRequest request, HttpServletResponse response) {
+		String workOrderNo=request.getParameter("workOrderNo");
+		String actualCompletionAmount=request.getParameter("actualCompletionAmount");
 		map = new ModelMap();
 		HashMap<String, Object> resultMap = new HashMap<>();
 		try {
@@ -142,12 +135,10 @@ public class WorkOrderController {
 	}
 	
 	@RequestMapping(value="/worksite/situation" , method=RequestMethod.GET)
-	public ModelMap showWorkSiteSituation(
-			@RequestParam("workSiteCourse") String workSiteCourse,
-			@RequestParam("workOrderNo") String workOrderNo,
-			@RequestParam("itemClassIfication") String itemClassIfication
-	)  {
-
+	public ModelMap showWorkSiteSituation(HttpServletRequest request, HttpServletResponse response) {
+		String workSiteCourse = request.getParameter("workSiteCourse");
+		String workOrderNo = request.getParameter("workOrderNo");
+		String itemClassIfication = request.getParameter("itemClassIfication");
 		map = new ModelMap();
 		try {
 			map = qualityService.showWorkSiteSituation(workSiteCourse,workOrderNo,itemClassIfication);
@@ -160,11 +151,10 @@ public class WorkOrderController {
 	}
 	
 	@RequestMapping(value="/workorder/workcompletion" , method=RequestMethod.POST)
-	public ModelMap workCompletion(
-			@RequestParam("workOrderNo") String workOrderNo,
-			@RequestParam("itemCode") String itemCode,
-			@RequestParam("itemCodeList") String itemCodeList
-	)  {
+	public ModelMap workCompletion(HttpServletRequest request, HttpServletResponse response) {
+		String workOrderNo = request.getParameter("workOrderNo"); 
+		String itemCode = request.getParameter("itemCode"); 
+		String itemCodeList = request.getParameter("itemCodeList");  
 		map = new ModelMap();
 		try {
 			ArrayList<String> itemCodeListArr = gson.fromJson(itemCodeList,
@@ -179,10 +169,8 @@ public class WorkOrderController {
 	}
 	
 	@RequestMapping(value="/workorder/worksitelog" , method=RequestMethod.GET)
-	public ModelMap workSiteLogList(
-			@RequestParam("workSiteLogDate") String workSiteLogDate
-	) {
-
+	public ModelMap workSiteLogList(HttpServletRequest request, HttpServletResponse response) {
+		String workSiteLogDate = request.getParameter("workSiteLogDate");
 		map = new ModelMap();
 		HashMap<String, Object> resultMap = new HashMap<>();
 		try {

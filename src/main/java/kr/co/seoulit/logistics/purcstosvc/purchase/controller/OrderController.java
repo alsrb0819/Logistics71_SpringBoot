@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -32,8 +31,8 @@ public class OrderController {
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 	
 	@RequestMapping(value="/order" , method=RequestMethod.GET)
-	public ModelMap checkOrderInfo(@RequestParam("orderNoList")String orderNoListStr) {
-
+	public ModelMap checkOrderInfo(HttpServletRequest request, HttpServletResponse response) {
+		String orderNoListStr = request.getParameter("orderNoList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> orderNoArr = gson.fromJson(orderNoListStr,
@@ -49,8 +48,9 @@ public class OrderController {
 	}
 	
 	@RequestMapping(value="/order/list" , method=RequestMethod.GET)
-	public ModelMap getOrderList(@RequestParam("startDate")String startDate,@RequestParam("endDate")String endDate) {
-
+	public ModelMap getOrderList(HttpServletRequest request, HttpServletResponse response) {
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		map = new ModelMap();
 		try {
 			HashMap<String, Object> resultMap = purchaseService.getOrderList(startDate, endDate);
@@ -66,9 +66,9 @@ public class OrderController {
 	}
 
 	@RequestMapping(value="/order/dialog" , method=RequestMethod.GET)
-	public ModelMap openOrderDialog(@RequestParam("mrpGatheringNoList")String mrpNoListStr) {
+	public ModelMap openOrderDialog(HttpServletRequest request, HttpServletResponse response) {
 		
-
+		String mrpNoListStr = request.getParameter("mrpGatheringNoList");
 		
 		HashMap<String,Object> resultMap = new HashMap<>();
 		ModelMap map = new ModelMap();
@@ -90,8 +90,9 @@ public class OrderController {
 	}
 
 	@RequestMapping(value="/order/info" , method=RequestMethod.GET)
-	public ModelMap showOrderInfo(@RequestParam("startDate")String startDate,@RequestParam("endDate")String endDate) {
-
+	public ModelMap showOrderInfo(HttpServletRequest request, HttpServletResponse response) {
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		map = new ModelMap();
 		try {
 			ArrayList<OrderInfoTO> orderInfoList = purchaseService.getOrderInfoList(startDate,endDate);
@@ -123,8 +124,8 @@ public class OrderController {
 	}
 
 	@RequestMapping(value="/order" , method=RequestMethod.POST)
-	public ModelMap order(@RequestParam("mrpGatheringNoList")String mrpGatheringNoListStr) {
-
+	public ModelMap order(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringNoListStr = request.getParameter("mrpGatheringNoList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> mrpGaNoArr = gson.fromJson(mrpGatheringNoListStr , new TypeToken<ArrayList<String>>() {
@@ -140,9 +141,10 @@ public class OrderController {
 	}
 
 	@RequestMapping(value="/order/option" , method=RequestMethod.POST)
-	public ModelMap optionOrder(@RequestParam("itemCode")String itemCode,@RequestParam("itemAmount")String itemAmount) {
+	public ModelMap optionOrder(HttpServletRequest request, HttpServletResponse response) {
 		HashMap<String, Object> resultMap = new HashMap<>();
-
+		String itemCode = request.getParameter("itemCode");
+		String itemAmount = request.getParameter("itemAmount");
 		map = new ModelMap();
 		try {
 			resultMap = purchaseService.optionOrder(itemCode, itemAmount);

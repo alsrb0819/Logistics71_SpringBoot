@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.seoulit.logistics.purcstosvc.purchase.service.PurchaseService;
@@ -25,12 +24,12 @@ public class OutSourcingController {
 	ModelMap map = null;
 
 	@RequestMapping(value="/outsourcing/list" , method=RequestMethod.GET)
-	public ModelMap searchOutSourcingList(@RequestParam("fromDate")String fromDate,
-										  @RequestParam("toDate")String toDate,
-										  @RequestParam("customerCode")String customerCode,
-										  @RequestParam("itemCode")String itemCode,
-										  @RequestParam("materialStatus")String materialStatus) {
-
+	public ModelMap searchOutSourcingList(HttpServletRequest request, HttpServletResponse response) {
+		String fromDate = request.getParameter("fromDate");
+		String toDate = request.getParameter("toDate");
+		String customerCode = request.getParameter("customerCode");
+		String itemCode = request.getParameter("itemCode");
+		String materialStatus = request.getParameter("materialStatus");
 		map = new ModelMap();
 		
 		try {

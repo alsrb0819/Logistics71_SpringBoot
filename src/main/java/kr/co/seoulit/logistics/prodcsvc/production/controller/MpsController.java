@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -28,18 +27,16 @@ public class MpsController {
 
 	@Autowired
 	private ProductionService productionService;
-
+	
 	ModelMap map = null;
 
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
 	@RequestMapping(value="/mps/list", method=RequestMethod.GET)
-
-	public ModelMap searchMpsInfo(@RequestParam("startDate")String startDate,
-								  @RequestParam("endDate")String endDate,
-								  @RequestParam("includeMrpApply")String includeMrpApply) {
-
-
+	public ModelMap searchMpsInfo(HttpServletRequest request, HttpServletResponse response) {
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
+		String includeMrpApply = request.getParameter("includeMrpApply"); 
 		map = new ModelMap();
 		try {
 			ArrayList<MpsTO> mpsTOList = productionService.getMpsList(startDate, endDate, includeMrpApply);
@@ -51,19 +48,19 @@ public class MpsController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		}
+		} 
 		return map;
 	}
 
 	@RequestMapping(value="/mps/contractdetail-available", method=RequestMethod.GET)
-
-	public ModelMap searchContractDetailListInMpsAvailable(@RequestParam("searchCondition")String searchCondition,
-														   @RequestParam("startDate")String startDate,
-														   @RequestParam("endDate")String endDate) {
-
+	public ModelMap searchContractDetailListInMpsAvailable(HttpServletRequest request,
+			HttpServletResponse response) {
+		String searchCondition = request.getParameter("searchCondition");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		map = new ModelMap();
 		try {
-			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList =
+			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList = 
 					productionService.getContractDetailListInMpsAvailable(searchCondition, startDate, endDate);
 			map.put("gridRowJson", contractDetailInMpsAvailableList);
 			map.put("errorCode", 1);
@@ -77,12 +74,11 @@ public class MpsController {
 	}
 
 	@RequestMapping(value="/mps/contractdetail-processplanavailable", method=RequestMethod.GET)
-
-	public ModelMap searchContractDetailListInProcessPlanAvailable(@RequestParam("searchCondition")String searchCondition,
-																   @RequestParam("startDate")String startDate,
-																   @RequestParam("endDate")String endDate) {
-
-
+	public ModelMap searchContractDetailListInProcessPlanAvailable(HttpServletRequest request,
+														   HttpServletResponse response) {
+		String searchCondition = request.getParameter("searchCondition");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		map = new ModelMap();
 		try {
 			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList =
@@ -99,15 +95,13 @@ public class MpsController {
 	}
 
 	@RequestMapping(value="/mps/salesplan-available", method=RequestMethod.GET)
-
-	public ModelMap searchSalesPlanListInMpsAvailable(@RequestParam("searchCondition")String searchCondition,
-													  @RequestParam("startDate")String startDate,
-													  @RequestParam("endDate")String endDate) {
-
-
+	public ModelMap searchSalesPlanListInMpsAvailable(HttpServletRequest request, HttpServletResponse response) {
+		String searchCondition = request.getParameter("searchCondition");
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		map = new ModelMap();
 		try {
-			ArrayList<SalesPlanInMpsAvailableTO> salesPlanInMpsAvailableList =
+			ArrayList<SalesPlanInMpsAvailableTO> salesPlanInMpsAvailableList = 
 					productionService.getSalesPlanListInMpsAvailable(searchCondition, startDate, endDate);
 
 			map.put("gridRowJson", salesPlanInMpsAvailableList);
@@ -122,10 +116,8 @@ public class MpsController {
 	}
 
 	@RequestMapping(value="mps/contractdetail", method=RequestMethod.PUT)
-
-	public ModelMap convertContractDetailToMps(@RequestParam("batchList")String batchList) {
-
-
+	public ModelMap convertContractDetailToMps(HttpServletRequest request, HttpServletResponse response) {
+		String batchList = request.getParameter("batchList"); 
 		map = new ModelMap();
 		ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList = gson.fromJson(batchList,
 				new TypeToken<ArrayList<ContractDetailInMpsAvailableTO>>() {}.getType());
@@ -140,15 +132,13 @@ public class MpsController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		}
+		} 
 		return map;
 	}
 
 	@RequestMapping(value="/mps/salesplan", method=RequestMethod.PUT)
-
-	public ModelMap convertSalesPlanToMps(@RequestParam("batchList")String batchList) {
-
-
+	public ModelMap convertSalesPlanToMps(HttpServletRequest request, HttpServletResponse response) {
+		String batchList = request.getParameter("batchList");
 		map = new ModelMap();
 		try {
 			ArrayList<SalesPlanInMpsAvailableTO> salesPlanInMpsAvailableList = gson.fromJson(batchList,
@@ -163,7 +153,7 @@ public class MpsController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		}
+		} 
 		return map;
 	}
 

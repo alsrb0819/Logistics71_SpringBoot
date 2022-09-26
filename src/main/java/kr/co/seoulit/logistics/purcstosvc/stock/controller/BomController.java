@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -34,10 +33,10 @@ public class BomController {
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
 	@RequestMapping(value="/bom/deploy", method=RequestMethod.GET)
-	public ModelMap searchBomDeploy(@RequestParam("deployCondition")String deployCondition,
-									@RequestParam("itemCode")String itemCode,
-									@RequestParam("itemClassificationCondition")String itemClassificationCondition) {
-
+	public ModelMap searchBomDeploy(HttpServletRequest request, HttpServletResponse response) {
+		String deployCondition = request.getParameter("deployCondition");
+		String itemCode = request.getParameter("itemCode");
+		String itemClassificationCondition = request.getParameter("itemClassificationCondition");
 		map= new ModelMap();
 		try {
 			ArrayList<BomDeployTO> bomDeployList = stockService.getBomDeployList(deployCondition, itemCode, itemClassificationCondition);
@@ -54,8 +53,8 @@ public class BomController {
 	}
 
 	@RequestMapping(value="/bom/info", method=RequestMethod.GET)
-	public ModelMap searchBomInfo(@RequestParam("parentItemCode")String parentItemCode) {
-
+	public ModelMap searchBomInfo(HttpServletRequest request, HttpServletResponse response) {
+		String parentItemCode = request.getParameter("parentItemCode");
 		map= new ModelMap();
 		try {
 			ArrayList<BomInfoTO> bomInfoList = stockService.getBomInfoList(parentItemCode);
@@ -92,12 +91,11 @@ public class BomController {
 	}
 
 	@RequestMapping(value="/bom/batch", method=RequestMethod.POST)
-	public ModelMap batchBomListProcess(@RequestParam("batchList")String batchList) {
-
+	public ModelMap batchBomListProcess(HttpServletRequest request, HttpServletResponse response) {
+		String batchList = request.getParameter("batchList");
 		map= new ModelMap();
 		ArrayList<BomTO> batchBomList = gson.fromJson(batchList, new TypeToken<ArrayList<BomTO>>() {
 		}.getType());
-
 		try {
 			HashMap<String, Object> resultList = stockService.batchBomListProcess(batchBomList);
 

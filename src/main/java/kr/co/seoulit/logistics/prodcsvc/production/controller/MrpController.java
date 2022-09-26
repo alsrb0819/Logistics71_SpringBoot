@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.google.gson.Gson;
@@ -33,14 +32,12 @@ public class MrpController {
 	private static Gson gson = new GsonBuilder().serializeNulls().create();	
 	
 	@RequestMapping(value="/mrp/list", method=RequestMethod.GET)
-
-	public ModelMap getMrpList(@RequestParam("mrpGatheringStatusCondition")String mrpGatheringStatusCondition,
-							   @RequestParam("dateSearchCondition")String dateSearchCondition,
-							   @RequestParam("mrpStartDate")String mrpStartDate,
-							   @RequestParam("mrpEndDate")String mrpEndDate,
-							   @RequestParam("mrpGatheringNo")String mrpGatheringNo) {
-
-
+	public ModelMap getMrpList(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringStatusCondition = request.getParameter("mrpGatheringStatusCondition");	
+		String dateSearchCondition = request.getParameter("dateSearchCondition");
+		String mrpStartDate = request.getParameter("mrpStartDate");
+		String mrpEndDate = request.getParameter("mrpEndDate");
+		String mrpGatheringNo = request.getParameter("mrpGatheringNo");
 		map = new ModelMap();
 		try {
 			ArrayList<MrpTO> mrpList = null;
@@ -65,10 +62,8 @@ public class MrpController {
 	
 	
 	@RequestMapping(value="/mrp/open", method=RequestMethod.GET)
-
-	public ModelMap openMrp(@RequestParam("mpsNoList")String mpsNoListStr) {
-
-
+	public ModelMap openMrp(HttpServletRequest request, HttpServletResponse response) {
+		String mpsNoListStr = request.getParameter("mpsNoList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> mpsNoArr = gson.fromJson(mpsNoListStr,
@@ -88,11 +83,9 @@ public class MrpController {
 
 	
 	@RequestMapping(value="/mrp", method=RequestMethod.POST)
-
-	public ModelMap registerMrp(@RequestParam("batchList")String batchList,
-								@RequestParam("mrpRegisterDate")String mrpRegisterDate) {
-
-
+	public ModelMap registerMrp(HttpServletRequest request, HttpServletResponse response) {
+		String batchList = request.getParameter("batchList"); 
+		String mrpRegisterDate = request.getParameter("mrpRegisterDate");
 		map = new ModelMap();
 		try {
 			ArrayList<String> mpsList = gson.fromJson(batchList, 
@@ -113,10 +106,8 @@ public class MrpController {
 	
 	
 	@RequestMapping(value="/mrp/gathering-list", method=RequestMethod.GET)
-
-	public ModelMap getMrpGatheringList(@RequestParam("mrpNoList")String mrpNoList) {
-
-
+	public ModelMap getMrpGatheringList(HttpServletRequest request, HttpServletResponse response) {
+		String mrpNoList = request.getParameter("mrpNoList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> mrpNoArr = gson.fromJson(mrpNoList,
@@ -137,12 +128,10 @@ public class MrpController {
 	
 
 	@RequestMapping(value="/mrp/gathering", method=RequestMethod.POST)
-
-	public ModelMap registerMrpGathering(@RequestParam("mrpGatheringRegisterDate")String mrpGatheringRegisterDate,
-										 @RequestParam("mrpNoList")String mrpNoList,
-										 @RequestParam("mrpNoAndItemCodeList")String mrpNoAndItemCodeList) {
-
-
+	public ModelMap registerMrpGathering(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringRegisterDate = request.getParameter("mrpGatheringRegisterDate"); 
+		String mrpNoList = request.getParameter("mrpNoList");
+		String mrpNoAndItemCodeList = request.getParameter("mrpNoAndItemCodeList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> mrpNoArr = gson.fromJson(mrpNoList,
@@ -164,12 +153,10 @@ public class MrpController {
 	
 
 	@RequestMapping(value="/mrp/mrpgathering/list", method=RequestMethod.GET)
-
-	public ModelMap searchMrpGathering(@RequestParam("searchDateCondition")String searchDateCondition,
-									   @RequestParam("mrpGatheringStartDate")String startDate,
-									   @RequestParam("mrpGatheringEndDate")String endDate) {
-
-
+	public ModelMap searchMrpGathering(HttpServletRequest request, HttpServletResponse response) {
+		String searchDateCondition = request.getParameter("searchDateCondition");
+		String startDate = request.getParameter("mrpGatheringStartDate");
+		String endDate = request.getParameter("mrpGatheringEndDate");
 		map = new ModelMap();
 		try {
 			ArrayList<MrpGatheringTO> mrpGatheringList = 

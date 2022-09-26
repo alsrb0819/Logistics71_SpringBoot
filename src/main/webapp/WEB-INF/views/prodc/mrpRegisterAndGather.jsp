@@ -421,7 +421,7 @@
             if (xhr.readyState == 4 && xhr.status == 200) {
                 let txt = xhr.responseText;
                 mrpSearchData = JSON.parse(txt);
-                console.log(mrpSearchData);
+                console.log("이거 맞냐?"+mrpSearchData);
                 mrpSearchGridOptions.api.setRowData(mrpSearchData.gridRowJson);
                 if (txt.errorCode < 0) {
                     Swal.fire({
@@ -452,6 +452,7 @@
             mrpNoList.push(data.mrpNo);
             mrpNoAndItemCodeList[data.mrpNo] = data.itemCode
         }
+
         console.log("mrpNoList"+mrpNoList);
         console.log("mrpNoAndItemCodeList"+mrpNoAndItemCodeList);
         getMrpGatheringModal(mrpNoList); // 소요량취합결과 데이터를 받아와 그리드에 세팅 
