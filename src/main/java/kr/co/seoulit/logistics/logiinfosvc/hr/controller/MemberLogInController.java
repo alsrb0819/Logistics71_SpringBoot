@@ -19,17 +19,17 @@ import kr.co.seoulit.logistics.logiinfosvc.hr.to.EmpInfoTO;
 @RestController
 @RequestMapping("/hr/*")
 public class MemberLogInController {
-    
+
 	@Autowired
 	private HRService hrService;
-	
+
 	ModelMap map = null;
 
 	@RequestMapping(value="/login", method=RequestMethod.GET)
     public ModelMap LogInCheck(HttpServletRequest request, HttpServletResponse response) {
       //  String viewName = null;
 		map = new ModelMap();
-        
+
         try {
             HttpSession session = request.getSession();
             String companyCode = request.getParameter("companyCode");
@@ -38,10 +38,10 @@ public class MemberLogInController {
             String userPassword = request.getParameter("userPassword");
 
             EmpInfoTO TO = hrService.accessToAuthority(companyCode, workplaceCode, userId, userPassword);
-            
+
             System.out.println("로그인한사람 정보"+TO);
-            
-            if (TO != null) {       
+
+            if (TO != null) {
                 session.setAttribute("sessionID", session.getId());
                 session.setAttribute("userId", TO.getUserId());
                 session.setAttribute("empCode", TO.getEmpCode());
@@ -54,9 +54,9 @@ public class MemberLogInController {
                 session.setAttribute("workplaceCode", workplaceCode);
                 session.setAttribute("workplaceName", TO.getWorkplaceName());
                 session.setAttribute("image", TO.getImage());
-                session.setAttribute("authorityGroupCode", TO.getUserAuthorityGroupList());    
+                session.setAttribute("authorityGroupCode", TO.getUserAuthorityGroupList());
                 session.setAttribute("authorityGroupMenuList", TO.getUserAuthorityGroupMenuList());
-                session.setAttribute("authorityGroupCode", TO.getAuthorityGroupList());    
+                session.setAttribute("authorityGroupCode", TO.getAuthorityGroupList());
                 session.setAttribute("authorityGroupMenuList", TO.getAuthorityGroupMenuList());
 
                 String[] allMenuList = hrService.getAllMenuList();
@@ -65,7 +65,7 @@ public class MemberLogInController {
                 session.setAttribute("allMenuList_b", allMenuList[2]);
             }
 
-        } catch (IdNotFoundException e1) {   
+        } catch (IdNotFoundException e1) {
             e1.printStackTrace();
             map.put("errorCode", -2);
             map.put("errorMsg", e1.getMessage());
