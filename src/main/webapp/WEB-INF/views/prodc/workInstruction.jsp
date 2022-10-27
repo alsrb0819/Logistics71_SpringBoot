@@ -126,18 +126,18 @@
  //Grid 버튼
   const myGrid = document.querySelector("#myGrid");
   const myGrid2 = document.querySelector("#myGrid2");
- //작업지시 버튼 
+ //작업지시 버튼
   const workOrderListBtn = document.querySelector("#workOrderListButton");  // 조회 버튼
   const showWorkOrderSimulationByMrpBtn = document.querySelector("#showWorkOrderSimulationByMrpButton");  // 모의작업지시 버튼
   //작업지시 모달창
-  const workOderDate = document.querySelector("#workOderDate");             //모의전개 달력                      
+  const workOderDate = document.querySelector("#workOderDate");             //모의전개 달력
   const workOrderBtn = document.querySelector("#workOrderButton");         // 모의전개된결과 작업지시
   const productionProcess = document.querySelector("#productionProcess"); // 생산공정코드
   // 작업지시 현황
   const workOrderInfoListBtn = document.querySelector("#workOrderInfoListButton"); //작업지시 조회버튼
   const workOrderCompletionBtn = document.querySelector("#workOrderCompletionButton"); //작업완료등록 버튼
-  
-  
+
+
   // 작업지시 의 그리드
   const workMrpColumn = [
     {
@@ -177,7 +177,7 @@
       event.api.sizeColumnsToFit();
     },
     onRowSelected: function(event) { // checkbox
-    	
+
       workMrpRowNode.push(event);
       console.log(workMrpRowNode);
     },
@@ -188,15 +188,15 @@
       return {'text-align': 'center'};
     },
   }
-  
+
  // ----------------------------------------------작업지시 조회-----------------------------------------------------------------//
- 
+
 // 작업지시조회
   workOrderListBtn.addEventListener('click', () => {   //--> P_WORK_ORDERABLE_MRP_LIST 프로시저 호출
     workOrderList();
-  }); 
+  });
   //작업지시 조회함수호출
-  const workOrderList = () => { 
+  const workOrderList = () => {
     workMrpGridOptions.api.setRowData([]);
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '${pageContext.request.contextPath}/quality/workorder/mrpavailable' +
@@ -222,7 +222,7 @@
   }
 
   // ----------------------------------------------모의작업지시 버튼-----------------------------------------------------------------//
-  
+
   //모의작업지시에서부른 모달창
   let _setWorkOrderSimulationModal = (function() {  // --> P_WORK_ORDER_SIMULATION 프로
 	    let executed = false;
@@ -233,7 +233,7 @@
 	      }
 	    };
 	  })();
-  
+
   //리스트 값이든변수 호출
   let _getDetailCodeList = (function() {
     let executed = false;
@@ -245,10 +245,10 @@
     };
   })();
   //리스트값들
-  const getDetailCodeList= () => { 
+  const getDetailCodeList= () => {
 	    let data = jsonData;
 	    console.log(data);
-	    let target = document.querySelector("#productionProcess");    //생성된모의작업지시 타겟에 넣기 
+	    let target = document.querySelector("#productionProcess");    //생성된모의작업지시 타겟에 넣기
 	    for (let index of data.detailCodeList) {
 	      let node = document.createElement("option");
 	      if (index.codeUseCheck != "N") { //CodeUseCheck가 N인것만 가능하다.
@@ -266,7 +266,7 @@
     if (selectedRows == "") {
       Swal.fire("알림", "선택한 행이 없습니다.", "info");
       return;
-    }  
+    }
     getListData('PP');  // modal.js 에서 값넣어서 불러옴
     //WorkOrderingNo=[]
     mrpGatheringNoList=[]
@@ -286,11 +286,11 @@
     }, 100)
 
   });
-  
-  
-  
-  // ----------------------------------------------모의전개된 작업지시 버튼 ----------------------------------------------------------------// 
-  //모의전개된 작업지시 버튼 
+
+
+
+  // ----------------------------------------------모의전개된 작업지시 버튼 ----------------------------------------------------------------//
+  //모의전개된 작업지시 버튼
   workOrderBtn.addEventListener('click', () => { //--> P_WORK_ORDER 프로
 	  let selectedRows = workMrpGridOptions.api.getSelectedRows();
     // o 확인
@@ -301,14 +301,14 @@
     if (productionProcess.value == "") {
       Swal.fire("알림", "생산공정코드를 입력하십시오.", "info");
       return
-    }  
+    }
     let displayModel = workOrderSimulationGridOptions.api.getModel(); // --> 모달에있는 그리드 값반환
       console.log(displayModel);
     let modalData = workOrderSimulationGridOptions.api.getRenderedNodes(); // -->  그리드를 랜더링해줌
     console.log(modalData);
     let workOrderSelected = []; //작업선택
     let workOrderList = []; // 작업지시
-    let workItem=""; 
+    let workItem="";
     let status=false;
     let lackTitle;   //
     let mrpGatheringNo=[]; //mrp 취합한번호
@@ -339,7 +339,7 @@
 	   selectedRows.forEach(function(element, index, array){
 		    mrpNo[index]=element.mrpNo;
 		    })
-		    
+
 		console.log(productionProcess.value);
       console.log('${sessionScope.workplaceCode}');
 	//let mrpNo = selectedRows[0].mrpNo;
@@ -357,7 +357,7 @@
     }).then((result) => {
       let productionProcessCode = productionProcess.value;
       console.log(mrpGatheringNo);
-   
+
       if (result.isConfirmed) {
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '${pageContext.request.contextPath}/quality/workorder' +
@@ -394,13 +394,13 @@
         }
       }
     })
-  }); 
-  
-  
+  });
 
 
-  // ----------------------------------------------작업지시 현황----------------------------------------------------------------// 
- 
+
+
+  // ----------------------------------------------작업지시 현황----------------------------------------------------------------//
+
   const workOrderInfoColumn = [
     {headerName: "작업지시일련번호", field: "workOrderNo", headerCheckboxSelection: false,
       headerCheckboxSelectionFilteredOnly: true, suppressRowClickSelection: true,
@@ -455,16 +455,16 @@
       return {'text-align': 'center'};
     },
   }
-  
-  
-  
-  // ----------------------------------------------작업지시조회 버튼 ----------------------------------------------------------------// 
 
-  workOrderInfoListBtn.addEventListener('click', () => { // 작업지시 조회 
+
+
+  // ----------------------------------------------작업지시조회 버튼 ----------------------------------------------------------------//
+
+  workOrderInfoListBtn.addEventListener('click', () => { // 작업지시 조회
     WorkOrderInfoList();
   });
-  
-  const WorkOrderInfoList = () => {  // 작업지시 조회 
+
+  const WorkOrderInfoList = () => {  // 작업지시 조회
     let xhr = new XMLHttpRequest();
     xhr.open('GET', '${pageContext.request.contextPath}/quality/workorder/list' +
         "?method=showWorkOrderInfoList",
@@ -487,16 +487,16 @@
       }
     }
   }
- 
-  // ----------------------------------------------작업완료등록 버튼----------------------------------------------------------------// 
-  
+
+  // ----------------------------------------------작업완료등록 버튼----------------------------------------------------------------//
+
     //작업완료등록 버튼
   workOrderCompletionBtn.addEventListener('click', () => {   //--> P_WORK_ORDER_COMPLETION 프로
     workOrderCompletion();
   })
-  
+
   // 함수호출
-  const workOrderCompletion = () => {  
+  const workOrderCompletion = () => {
     workOrderInfoGridOptions.api.stopEditing();
     let selectedRows = workOrderInfoGridOptions.api.getSelectedRows();
     let selectedRow = selectedRows[0];
@@ -517,10 +517,10 @@
         return;
       }
     //엄청 급한상황에서 작업지시현황에서 지시수량보다 작업완료된 수량이 적을경우 해당 재고만큼 납품가능하게 하기
-       
+
     let confirmMsg = "작업을 완료합니다.</br>"
                    + "작업일련번호 : " + selectedRow.workOrderNo  + "</br>"
-                   + "<b>작업완료된수량 : " + selectedRow.requiredAmount + "</b></br>"; 
+                   + "<b>작업완료된수량 : " + selectedRow.requiredAmount + "</b></br>";
                  //selectedRow.actualCompletionAmount
     // o 데이터 전송
     Swal.fire({
@@ -537,7 +537,7 @@
         let xhr = new XMLHttpRequest();
         xhr.open('POST', '${pageContext.request.contextPath}/quality/workorder/completion' +
             "?method=workOrderCompletion"
-            + "&workOrderNo=" + selectedRow.workOrderNo  // 작업지시번호 
+            + "&workOrderNo=" + selectedRow.workOrderNo  // 작업지시번호
             + "&actualCompletionAmount=" + selectedRow.requiredAmount, // 작업완료수량 selectedRow.actualCompletionAmount
             true)
             console.log("22::"+selectedRow.workOrderNo);

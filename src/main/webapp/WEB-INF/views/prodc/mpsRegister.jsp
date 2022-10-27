@@ -151,7 +151,7 @@
   const searchByDateRadio = document.querySelector("#searchByDateRadio");
   const startDatePicker = document.querySelector("#fromDate");
   const endDatePicker = document.querySelector("#toDate");
- 
+
 
   // O customerList Grid
   let mpsColumn = [
@@ -235,10 +235,10 @@
   }
 
   //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ MPS 등록가능 수주 조회ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-  
- 
+
+
   const contractCandidateSearchBtn = document.querySelector("#contractCandidateSearchButton");
-  
+
   contractCandidateSearchBtn.addEventListener("click", () => {
     // o contractDate or dueDateOfContract
     let isChecked = document.querySelector("#contractDate").checked
@@ -276,7 +276,7 @@
           swal.fire("mps 등록가능 수주가 없습니다.");
           return;
         }
-        console.log(gridRowJson);
+        console.log("여기 오니?");
         gridRowJson.map((unit, idx) => {
           unit.description = unit.description == null ? "" : unit.description
           unit.planClassification = unit.planClassification == null ? "수주상세" : unit.planClassification
@@ -289,9 +289,11 @@
   });
 
   //ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ MPS 등록 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
- 
+
   const registerNewMpsBtn = document.querySelector("#registerNewMpsButton");
-  
+
+  console.log("MPS등록");
+
   registerNewMpsBtn.addEventListener("click", () => {
     let selectedNodes = mpsGridOptions.api.getSelectedNodes();
     // o No seleted Nodes
@@ -317,7 +319,7 @@
       resultRows.push(node.data);
       console.log(resultList);
     }
-    resultList = JSON.stringify(resultList);  
+    resultList = JSON.stringify(resultList);
     // o insert mps
     Swal.fire({
       title: 'MPS 등록',
@@ -347,7 +349,7 @@
           }
           // 초기화
           let step;
-          for (step = 0; step < resultRows.length; step++) {  // resultRows는 선택한 수주상세 데이터를 담아두었던 변수 
+          for (step = 0; step < resultRows.length; step++) {  // resultRows는 선택한 수주상세 데이터를 담아두었던 변수
             mpsGridOptions.api.updateRowData({remove: [resultRows[step]]});
           }
           console.log("mps 등록 완료");
@@ -381,9 +383,9 @@
   })();
 
    // ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ MPS조회 ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-   
+
    const mpsModalBtn = document.querySelector("#mpsModalBtn");
-  
+
   mpsModalBtn.addEventListener("click", () => {   // MPS 조회
     if (startDatePicker.value == "" || endDatePicker.value == "") {
       swal.fire("입력", "조회기간을 설정해야합니다.", "info");

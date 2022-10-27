@@ -13,21 +13,21 @@ import kr.co.seoulit.logistics.prodcsvc.quality.to.WorkOrderInfoTO;
 public interface WorkOrderMapper {
 
 	public void getWorkOrderableMrpList(HashMap<String, Object> map);
-	
-	public void getWorkOrderSimulationList(HashMap<String, String> map);	
-	
+
+	public void getWorkOrderSimulationList(HashMap<String, Object> map);
+
 	public void workOrder(HashMap<String, String> map);
-	
+
 	public ArrayList<WorkOrderInfoTO> selectWorkOrderInfoList();
-	
+
 	public void workOrderCompletion(HashMap<String, Object> map);
-	
+
 	public ArrayList<ProductionPerformanceInfoTO> selectProductionPerformanceInfoList();
-	
+
 	public void selectWorkSiteSituation(HashMap<String, Object> map);
-	
+
 	public void updateWorkCompletionStatus(HashMap<String, String> map);
-	
+
 	public ArrayList<WorkSiteLog> workSiteLogList(HashMap<String, String> map);
 
 }

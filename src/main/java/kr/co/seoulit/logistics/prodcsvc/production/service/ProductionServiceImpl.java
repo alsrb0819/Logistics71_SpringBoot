@@ -20,7 +20,7 @@ import kr.co.seoulit.logistics.prodcsvc.production.to.SalesPlanInMpsAvailableTO;
 
 @Service
 public class ProductionServiceImpl implements ProductionService {
-	
+
 	@Autowired
 	private MpsMapper mpsMapper;
 	@Autowired
@@ -34,13 +34,13 @@ public class ProductionServiceImpl implements ProductionService {
 	public ArrayList<MpsTO> getMpsList(String startDate, String endDate, String includeMrpApply) {
 
 		ArrayList<MpsTO> mpsTOList = null;
-		
+
 		HashMap<String, String> map = new HashMap<>();
 
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 		map.put("includeMrpApply", includeMrpApply);
-		
+
 		mpsTOList = mpsMapper.selectMpsList(map);
 
 		return mpsTOList;
@@ -51,15 +51,15 @@ public class ProductionServiceImpl implements ProductionService {
 			String startDate, String endDate) {
 
 		ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList = null;
-		
+
 		HashMap<String, String> map = new HashMap<>();
-		
+
 		map.put("searchCondition", searchCondition);
 		map.put("startDate", startDate);
 		map.put("endDate", endDate);
 
 		contractDetailInMpsAvailableList = contractMapper.selectContractDetailListInMpsAvailable(map);
-		
+
 		return contractDetailInMpsAvailableList;
 
 	}
@@ -88,7 +88,7 @@ public class ProductionServiceImpl implements ProductionService {
 			String startDate, String endDate) {
 
 		ArrayList<SalesPlanInMpsAvailableTO> salesPlanInMpsAvailableList = null;
-		
+
 		HashMap<String, String> map = new HashMap<>();
 
 		map.put("searchCondition", searchCondition);
@@ -103,37 +103,41 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Override
 	public HashMap<String, Object> convertContractDetailToMps(
-			ArrayList<ContractDetailInMpsAvailableTO> contractDetailInMpsAvailableList) {
-		
+			ContractDetailInMpsAvailableTO contractDetailInMpsAvailableTO) {
+
+		System.out.println("MPS 등록 ServiceImpl");
+
 		HashMap<String, Object> resultMap = null;
 
 		ArrayList<MpsTO> mpsTOList = new ArrayList<>();
 
 		MpsTO newMpsBean = null;
 
-		for (ContractDetailInMpsAvailableTO bean : contractDetailInMpsAvailableList) {
 
+		System.out.println("convertContractDetailToMps ApplicationServiceImpl접근----------------------------"
+				+ contractDetailInMpsAvailableTO.getContractDetailNo());
 			newMpsBean = new MpsTO();
 
 			newMpsBean.setStatus("INSERT");
 
-			newMpsBean.setMpsPlanClassification(bean.getPlanClassification());
-			newMpsBean.setContractDetailNo(bean.getContractDetailNo());
-			newMpsBean.setItemCode(bean.getItemCode());
-			newMpsBean.setItemName(bean.getItemName());
-			newMpsBean.setUnitOfMps(bean.getUnitOfContract());
-			newMpsBean.setMpsPlanDate(bean.getMpsPlanDate());
-			newMpsBean.setMpsPlanAmount(bean.getProductionRequirement());
-			newMpsBean.setDueDateOfMps(bean.getDueDateOfContract());
-			newMpsBean.setScheduledEndDate(bean.getScheduledEndDate());
-			newMpsBean.setDescription(bean.getDescription());
+			newMpsBean.setMpsPlanClassification(contractDetailInMpsAvailableTO.getPlanClassification());
+			newMpsBean.setContractDetailNo(contractDetailInMpsAvailableTO.getContractDetailNo());
+			newMpsBean.setItemCode(contractDetailInMpsAvailableTO.getItemCode());
+			newMpsBean.setItemName(contractDetailInMpsAvailableTO.getItemName());
+			newMpsBean.setUnitOfMps(contractDetailInMpsAvailableTO.getUnitOfContract());
+			newMpsBean.setMpsPlanDate(contractDetailInMpsAvailableTO.getMpsPlanDate());
+			newMpsBean.setMpsPlanAmount(contractDetailInMpsAvailableTO.getProductionRequirement());
+			newMpsBean.setDueDateOfMps(contractDetailInMpsAvailableTO.getDueDateOfContract());
+			newMpsBean.setScheduledEndDate(contractDetailInMpsAvailableTO.getScheduledEndDate());
+			newMpsBean.setDescription(contractDetailInMpsAvailableTO.getDescription());
 
 			mpsTOList.add(newMpsBean);
 
-		}
+
 
 		resultMap = batchMpsListProcess(mpsTOList); //batchMpsListProcess 메소드 호출
 
+		System.out.println("Impl 지남");
 		return resultMap;
 
 	}
@@ -178,8 +182,9 @@ public class ProductionServiceImpl implements ProductionService {
 	@Override
 	public HashMap<String, Object> batchMpsListProcess(ArrayList<MpsTO> mpsTOList) {
 
-		HashMap<String, Object> resultMap = new HashMap<>();
-		
+		HashMap<String, Object> resultMap = null;
+		resultMap = new HashMap<>();
+		System.out.println("application다음으로 옮겨온곳 = " + mpsTOList);
 		ArrayList<String> insertList = new ArrayList<>();
 		ArrayList<String> updateList = new ArrayList<>();
 		ArrayList<String> deleteList = new ArrayList<>();
@@ -187,7 +192,9 @@ public class ProductionServiceImpl implements ProductionService {
 		for (MpsTO bean : mpsTOList) {
 
 			String status = bean.getStatus();
-							
+
+			System.out.println("bean에서 뽑아낸 status의 값은 ::::::::::" + status);
+
 			switch (status) {
 
 			case "INSERT":
@@ -255,7 +262,7 @@ public class ProductionServiceImpl implements ProductionService {
 	public ArrayList<MrpTO> selectMrpListAsDate(String dateSearchCondtion, String startDate, String endDate) {
 
 		ArrayList<MrpTO> mrpList = null;
-		
+
 		HashMap<String, String> map = new HashMap<>();
 
 		map.put("dateSearchCondtion", dateSearchCondtion);
@@ -282,7 +289,7 @@ public class ProductionServiceImpl implements ProductionService {
 			String endDate) {
 
 		ArrayList<MrpGatheringTO> mrpGatheringList = null;
-		
+
 		HashMap<String, String> map = new HashMap<>();
 
 		map.put("dateSearchCondtion", dateSearchCondtion);
@@ -292,9 +299,9 @@ public class ProductionServiceImpl implements ProductionService {
 		mrpGatheringList = mrpMapper.selectMrpGatheringList(map);
 
 		for(MrpGatheringTO bean : mrpGatheringList)    {
-	            
+
 	    	bean.setMrpTOList(  mrpMapper.selectMrpListAsMrpGatheringNo( bean.getMrpGatheringNo()) );
-	         
+
 		}
 
 		return mrpGatheringList;
@@ -302,50 +309,50 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Override
 	public HashMap<String, Object> openMrp(ArrayList<String> mpsNoArr) {
-		
+
 		String mpsNoList = mpsNoArr.toString().replace("[", "").replace("]", "");
-	         
+
         HashMap<String, Object> resultMap = new HashMap<String, Object>();
-        
+
         HashMap<String, String> map = new HashMap<String, String>();
-        
+
         map.put("mpsNoList", mpsNoList);
-        
+
         mrpMapper.openMrp(map);
-        
+
         System.out.println(map);
 
 		resultMap.put("result", map.get("RESULT"));
 		resultMap.put("errorCode",map.get("ERROR_CODE"));
 		resultMap.put("errorMsg", map.get("ERROR_MSG"));
-		
+
 		return resultMap;
 	}
-	
+
 	@Override
 	public HashMap<String, Object> registerMrp(String mrpRegisterDate, ArrayList<String> mpsList) {
 
 	      HashMap<String, Object> resultMap = new HashMap<String, Object>();
-	      
+
 	      HashMap<String, Object> map = new HashMap<String, Object>();
-	      
+
 	      map.put("mrpRegisterDate", mrpRegisterDate);
-		
+
 		 mrpMapper.insertMrpList(map);
-		
+
 	      resultMap.put("result", map.get("RESULT"));
 		  resultMap.put("errorCode", map.get("ERROR_CODE"));
 		  resultMap.put("errorMsg", map.get("ERROR_MSG"));
 
 		for (String mpsNo : mpsList) {
-			
+
 			HashMap<String, String> mpsMap = new HashMap<>();
 
 			mpsMap.put("mpsNo", mpsNo);
 			mpsMap.put("mrpStatus", "Y");
 
 			mpsMapper.changeMrpApplyStatus(mpsMap);
-	            
+
 		}
 
 		return resultMap;
@@ -353,7 +360,7 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Override
 	public HashMap<String, Object> batchMrpListProcess(ArrayList<MrpTO> mrpTOList) {
-		
+
 		HashMap<String, Object> resultMap = new HashMap<>();
 
 		ArrayList<String> insertList = new ArrayList<>();
@@ -377,7 +384,7 @@ public class ProductionServiceImpl implements ProductionService {
 	            case "UPDATE":
 
 	               mrpMapper.updateMrp(bean);
-	               
+
 	               updateList.add(bean.getMrpNo());
 
 	               break;
@@ -403,7 +410,7 @@ public class ProductionServiceImpl implements ProductionService {
 
 	@Override
 	public ArrayList<MrpGatheringTO> getMrpGathering(ArrayList<String> mrpNoArr) {
-		
+
 		ArrayList<MrpGatheringTO> mrpGatheringList = null;
 
 		String mrpNoList = mrpNoArr.toString().replace("[", "").replace("]", "");
@@ -411,10 +418,10 @@ public class ProductionServiceImpl implements ProductionService {
 
 		return mrpGatheringList;
 	}
-	
+
 	@Override
 	public HashMap<String, Object> registerMrpGathering(String mrpGatheringRegisterDate,ArrayList<String> mrpNoArr,HashMap<String, String> mrpNoAndItemCodeMap) {
-		
+
 		HashMap<String, Object> resultMap = null;
 	    int seq=0;
 	    ArrayList<MrpGatheringTO> mrpGatheringList = null;
@@ -434,21 +441,21 @@ public class ProductionServiceImpl implements ProductionService {
 	    HashMap<String, String> itemCodeAndMrpGatheringNoMap = new HashMap<>();
 
 	    StringBuffer newMrpGatheringNo = new StringBuffer();
-	    newMrpGatheringNo.append("MG"); 
+	    newMrpGatheringNo.append("MG");
 	    newMrpGatheringNo.append(mrpGatheringRegisterDate.replace("-", ""));
 	    newMrpGatheringNo.append("-");
-	         
+
 	    seq=mrpMapper.getMGSeqNo();
-	         
+
 	    mrpGatheringList = getMrpGathering(mrpNoArr);
 
-	    for (MrpGatheringTO bean : mrpGatheringList) { 
+	    for (MrpGatheringTO bean : mrpGatheringList) {
 	    	bean.setMrpGatheringNo(newMrpGatheringNo.toString() + String.format("%03d", i++));
 	    	bean.setStatus("INSERT");
 	    	bean.setMrpGatheringSeq(seq);
 
 	    	itemCodeAndMrpGatheringNoMap.put(bean.getItemCode(), bean.getMrpGatheringNo());
-	            
+
 	    }
 
 	    resultMap = batchMrpGatheringListProcess(mrpGatheringList);
@@ -457,11 +464,11 @@ public class ProductionServiceImpl implements ProductionService {
 
 	    @SuppressWarnings("unchecked")
 	    HashMap<String, String> mrpGatheringNoList = (HashMap<String, String>) resultMap.get("INSERT_MAP");//key(ItemCode):value(소요량취합번호)
-	         
+
 	    for (String mrpGatheringNo : mrpGatheringNoList.values()) {
-	    	
+
 	    	mrpGatheringNoSet.add(mrpGatheringNo);
-	            
+
 	    }
 
 	    resultMap.put("firstMrpGatheringNo", mrpGatheringNoSet.pollFirst());
@@ -470,28 +477,28 @@ public class ProductionServiceImpl implements ProductionService {
 	    for (String mrpNo : mrpNoAndItemCodeMap.keySet()) {
 	    	String itemCode = mrpNoAndItemCodeMap.get(mrpNo);
 	    	String mrpGatheringNo = itemCodeAndMrpGatheringNoMap.get(itemCode);
-	    	
+
 	    	HashMap<String, String> map = new HashMap<>();
 
 	    	map.put("mrpNo", mrpNo);
 	    	map.put("mrpGatheringNo", mrpGatheringNo);
 	    	map.put("mrpGatheringStatus", "Y");
-	    	
+
 	    	mrpMapper.changeMrpGatheringStatus(map);
 	    }
-	         
+
 	    String mrpNoList = mrpNoArr.toString().replace("[", "").replace("]", "");
 
 	    resultMap.put("changeMrpGatheringStatus", mrpNoList);
 
 	    StringBuffer sb = new StringBuffer();
-	 		
+
 	    for(String mrpGatheringNo : mrpGatheringNoList.values()) {
 	    	sb.append(mrpGatheringNo);
 	    	sb.append(",");
 	    }
 	    sb.delete(sb.toString().length()-1, sb.toString().length());
-	    
+
 	    HashMap<String, String> parameter = new HashMap<>();
 	    parameter.put("mrpGatheringNo", sb.toString());
 	    mrpMapper.updateMrpGatheringContract(parameter);
@@ -506,7 +513,7 @@ public class ProductionServiceImpl implements ProductionService {
 			String mpsNo = bean.getMpsNo();
 			// MPS 일련번호에서 마지막 2자리만 가져오기
 			int no = Integer.parseInt(mpsNo.substring(mpsNo.length() - 2, mpsNo.length()));
-			intSet.add(no);	
+			intSet.add(no);
 		}
 		int i=1;
 		if (!intSet.isEmpty()) {
@@ -527,7 +534,7 @@ public class ProductionServiceImpl implements ProductionService {
 
 		map.put("contractDetailNo", contractDetailNo);
 		map.put("mpsStatus", mpsStatus);
-		
+
 		contractMapper.changeMpsStatusOfContractDetail(map);
 
 	}
@@ -538,7 +545,7 @@ public class ProductionServiceImpl implements ProductionService {
 
 		map.put("salesPlanNo", salesPlanNo);
 		map.put("mpsStatus", mpsStatus);
-		
+
 		salesPlanMapper.changeMpsStatusOfSalesPlan(map);
 
 	}
@@ -547,21 +554,21 @@ public class ProductionServiceImpl implements ProductionService {
 
 		HashMap<String, Object> resultMap = new HashMap<>();
 
-		 HashMap<String, String> insertListMap = new HashMap<>(); 
+		 HashMap<String, String> insertListMap = new HashMap<>();
 		 ArrayList<String> insertList = new ArrayList<>();
 		 ArrayList<String> updateList = new ArrayList<>();
 		 ArrayList<String> deleteList = new ArrayList<>();
 
 		 for (MrpGatheringTO bean : mrpGatheringTOList) {
-		            
+
 			 String status = bean.getStatus();
-		            
+
 			 switch (status) {
 
 			 	case "INSERT":
 
 			 			mrpMapper.insertMrpGathering(bean);
-		               
+
 			 			insertList.add(bean.getMrpGatheringNo());
 
 			 			insertListMap.put(bean.getItemCode(), bean.getMrpGatheringNo());

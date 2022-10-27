@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +23,7 @@ import kr.co.seoulit.logistics.prodcsvc.quality.to.ProductionPerformanceInfoTO;
 import kr.co.seoulit.logistics.prodcsvc.quality.to.WorkOrderInfoTO;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/quality/*")
 public class WorkOrderController {
 
@@ -30,41 +32,48 @@ public class WorkOrderController {
 
 	ModelMap map = null;
 
+
 	private static Gson gson = new GsonBuilder().serializeNulls().create();
 
-	@RequestMapping(value="/workorder/mrpavailable" , method=RequestMethod.GET)	
-	public ModelMap getWorkOrderableMrpList(HttpServletRequest request, HttpServletResponse response) {
-		map = new ModelMap();
+	@RequestMapping(value="/workorder/mrpavailable" , method=RequestMethod.GET)
+	public HashMap<String, Object> getWorkOrderableMrpList(HttpServletRequest request, HttpServletResponse response) {
+		HashMap<String, Object> resultMap = new HashMap<>();
+
 		try {
-			map = qualityService.getWorkOrderableMrpList();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			map.put("errorCode", -1);
-			map.put("errorMsg", e1.getMessage());
-		} 
-		return map;
+			resultMap = qualityService.getWorkOrderableMrpList();
+			System.out.println("resultMap.toString() = " + resultMap.toString());
+		} catch (Exception e2) {
+			e2.printStackTrace();
+			resultMap.put("errorCode", -2);
+			resultMap.put("errorMsg", e2.getMessage());
+
+		}
+		return resultMap;
 	}
 
 	@RequestMapping(value="/workorder/dialog" , method=RequestMethod.GET)
-	public ModelMap showWorkOrderDialog(HttpServletRequest request, HttpServletResponse response) {
-		String mrpGatheringNoList = request.getParameter("mrpGatheringNoList");
-		String mrpNoList = request.getParameter("mrpNoList");
-		map = new ModelMap();
+	public HashMap<String, Object> showWorkOrderDialog(HttpServletRequest request, HttpServletResponse response) {
+		String mrpGatheringNo = request.getParameter("mrpGatheringNo");
+//		String mrpNoList = request.getParameter("mrpNoList");
+
+		HashMap<String, Object> map =new HashMap<>();
+		System.out.println("작업지시");
 		try {
-			map = qualityService.getWorkOrderSimulationList(mrpGatheringNoList,mrpNoList);
+//			map = qualityService.getWorkOrderSimulationList(mrpGatheringNoList,mrpNoList);
+			map = qualityService.getWorkOrderSimulationList(mrpGatheringNo);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
 
 	@RequestMapping(value="/workorder" , method=RequestMethod.POST)
 	public ModelMap workOrder(HttpServletRequest request, HttpServletResponse response) {
 		String mrpGatheringNo = request.getParameter("mrpGatheringNo"); // mrpGatheringNo
-		String workPlaceCode = request.getParameter("workPlaceCode"); 
-		String productionProcess = request.getParameter("productionProcessCode"); 
+		String workPlaceCode = request.getParameter("workPlaceCode");
+		String productionProcess = request.getParameter("productionProcessCode");
 		String mrpNo = request.getParameter("mrpNo");
 		map = new ModelMap();
 		try {
@@ -75,7 +84,7 @@ public class WorkOrderController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
 
@@ -85,7 +94,7 @@ public class WorkOrderController {
 		map = new ModelMap();
 		try {
 			workOrderInfoList = qualityService.getWorkOrderInfoList();
-			
+
 			map.put("gridRowJson", workOrderInfoList);
 			map.put("errorCode", 1);
 			map.put("errorMsg", "성공");
@@ -93,11 +102,11 @@ public class WorkOrderController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
-	
-	@RequestMapping(value="/workorder/completion" , method=RequestMethod.POST)
+
+	@RequestMapping(value="/workorder/completion" , method=RequestMethod.GET)
 	public ModelMap workOrderCompletion(HttpServletRequest request, HttpServletResponse response) {
 		String workOrderNo=request.getParameter("workOrderNo");
 		String actualCompletionAmount=request.getParameter("actualCompletionAmount");
@@ -105,17 +114,17 @@ public class WorkOrderController {
 		HashMap<String, Object> resultMap = new HashMap<>();
 		try {
 			resultMap = qualityService.workOrderCompletion(workOrderNo,actualCompletionAmount);
-			
+
 			map.put("errorCode",resultMap.get("ERROR_CODE"));
 			map.put("errorMsg", resultMap.get("ERROR_MSG"));
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
-	
+
 	@RequestMapping(value="/workorder/performance-list" , method=RequestMethod.GET)
 	public ModelMap getProductionPerformanceInfoList(HttpServletRequest request, HttpServletResponse response) {
 		ArrayList<ProductionPerformanceInfoTO> productionPerformanceInfoList = null;
@@ -130,10 +139,10 @@ public class WorkOrderController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
-	
+
 	@RequestMapping(value="/worksite/situation" , method=RequestMethod.GET)
 	public ModelMap showWorkSiteSituation(HttpServletRequest request, HttpServletResponse response) {
 		String workSiteCourse = request.getParameter("workSiteCourse");
@@ -146,15 +155,15 @@ public class WorkOrderController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
-	
+
 	@RequestMapping(value="/workorder/workcompletion" , method=RequestMethod.POST)
 	public ModelMap workCompletion(HttpServletRequest request, HttpServletResponse response) {
-		String workOrderNo = request.getParameter("workOrderNo"); 
-		String itemCode = request.getParameter("itemCode"); 
-		String itemCodeList = request.getParameter("itemCodeList");  
+		String workOrderNo = request.getParameter("workOrderNo");
+		String itemCode = request.getParameter("itemCode");
+		String itemCodeList = request.getParameter("itemCodeList");
 		map = new ModelMap();
 		try {
 			ArrayList<String> itemCodeListArr = gson.fromJson(itemCodeList,
@@ -164,10 +173,10 @@ public class WorkOrderController {
 			e1.printStackTrace();
 			map.put("errorCode", -1);
 			map.put("errorMsg", e1.getMessage());
-		} 
+		}
 		return map;
 	}
-	
+
 	@RequestMapping(value="/workorder/worksitelog" , method=RequestMethod.GET)
 	public ModelMap workSiteLogList(HttpServletRequest request, HttpServletResponse response) {
 		String workSiteLogDate = request.getParameter("workSiteLogDate");
@@ -175,7 +184,7 @@ public class WorkOrderController {
 		HashMap<String, Object> resultMap = new HashMap<>();
 		try {
 			resultMap = qualityService.workSiteLogList(workSiteLogDate);
-			
+
 			map.put("gridRowJson", resultMap.get("gridRowJson"));
 			map.put("errorCode", resultMap.get("errorCode"));
 			map.put("errorMsg", resultMap.get("errorMsg"));
@@ -186,5 +195,5 @@ public class WorkOrderController {
 		}
 		return map;
 	}
-	
+
 }
