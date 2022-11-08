@@ -83,6 +83,7 @@
 		<result property="inspectionStatus" column="INSPECTION_STATUS" />
 		<result property="productionStatus" column="PRODUCTION_STATUS"  />
 		<result property="completionStatus" column="COMPLETION_STATUS"  />
+<!--		<result property="operationCompleted" column="OPERATION_COMPLETED"  />-->
 	</resultMap>
 
 	<select id="selectWorkOrderInfoList" resultMap="workOrderInfoResult">

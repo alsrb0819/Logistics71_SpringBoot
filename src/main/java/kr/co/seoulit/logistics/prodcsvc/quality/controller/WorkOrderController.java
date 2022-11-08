@@ -1,12 +1,12 @@
 package kr.co.seoulit.logistics.prodcsvc.quality.controller;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+import kr.co.seoulit.logistics.prodcsvc.quality.service.QualityService;
+import kr.co.seoulit.logistics.prodcsvc.quality.to.ProductionPerformanceInfoTO;
+import kr.co.seoulit.logistics.prodcsvc.quality.to.WorkOrderInfoTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,13 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-
-import kr.co.seoulit.logistics.prodcsvc.quality.service.QualityService;
-import kr.co.seoulit.logistics.prodcsvc.quality.to.ProductionPerformanceInfoTO;
-import kr.co.seoulit.logistics.prodcsvc.quality.to.WorkOrderInfoTO;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 @RestController
 @CrossOrigin("*")
@@ -159,7 +156,7 @@ public class WorkOrderController {
 		return map;
 	}
 
-	@RequestMapping(value="/workorder/workcompletion" , method=RequestMethod.POST)
+		@RequestMapping(value="/workorder/workcompletion" , method=RequestMethod.POST)
 	public ModelMap workCompletion(HttpServletRequest request, HttpServletResponse response) {
 		String workOrderNo = request.getParameter("workOrderNo");
 		String itemCode = request.getParameter("itemCode");
